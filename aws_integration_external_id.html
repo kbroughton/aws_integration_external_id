@@ -120,19 +120,135 @@
           width: 1.6em;
           height: 1.6em;
       }
+
+  .switch-toggle {
+     float: left;
+     background: #242729;
+  }
+  .switch-toggle input {
+    position: absolute;
+    opacity: 0;
+  }
+  .switch-toggle input + label {
+    padding: 7px;
+    float:left;
+    color: #fff;
+    cursor: pointer;
+  }
+  .switch-toggle input:checked + label {
+    background: green;
+}
+.highlighted {
+  background-color: #ff0;
+}
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
     </style>
+
+        <script data-require="jquery" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js"></script>
+
     <title>Confused Deputy Demo</title>
-</head>
-<body onload="brython()">
-    <h1>Super Secure Your Cloud We Will Make</h1>
+
+    </head>
+    <body onload="brython()">
+        <h1>Super Secure Your Cloud We Will Make</h1>
+
+     <div class="switch-toggle switch-3 switch-candy">
+
+      <input id="trivial" name="state-d" type="radio" checked="" />
+      <label for="trivial" onclick="toggleBtnTrivial()">Trivial</label>
+
+      <input id="easy" name="state-d" type="radio" checked="" />
+      <label for="easy" onclick="">Easy</label>
+
+      <input id="tamper" name="state-d" type="radio" checked="checked" />
+      <label for="tamper" class="disabled" onclick="">Tamper</label>
+
+      <input id="insider_attack" name="state-d" type="radio" checked="checked" />
+      <label for="insider_attack" class="disabled" onclick="">Insider Attack</label>
+
+      <input id="secure" name="state-d" type="radio" />
+      <label for="secure" onclick="">Secure</label>
+
+      </div>
+<br>
+
+<script>
+  function toggleBtnTrivial() {
+    document.getElementById('UUID').innerHTML = "SecureCloud"
+  }
+  function toggleBtnEasy() {
+    document.getElementById('UUID').innerHTML = "eg. SecureCloud_<AWS Account ID>"
+  }
+  function toggleBtnTamper() {
+    document.getElementById('UUID').innerHTML = "SecureCloud"
+  }
+  function toggleBtnInsider() {
+    document.getElementById('UUID').innerHTML = "SecureCloud"
+  }
+  function toggleBtnSecure() {
+    document.getElementById('UUID').innerHTML = "SecureCloud"
+  }
+
+</script>
 
     <br>
-    Your AWS Account Id
+    Your AWS Account Id <div class="tooltip">
+               <small type="text">Guess the account Id</small>
+               <span class="tooltiptext">See the policy below</span>
+                        </div>
     <br>
     <input type="text" id="text" placeholder="eg. 123456789012">
     <span id="output"></span>
     <br>
-    Role Name <very-small>for Super Secure Cloud to assume in your account</very-small>
+    Role Name <very-small>You create this in your account for Super Secure Cloud to access your data</very-small>
     <br>
     <input type="text" id="text" placeholder="eg. SSC_role">
     <span id="output"></span>
@@ -148,10 +264,31 @@
     <button id="regenerate-btn">Regenerate External ID</button>
     <button id="test-connection-btn">Test Connection</button>
     <br>
-    Victim Account Assume Role Trust Policy in AWS Portal
+    <small type="text">SSC_role Assume Role Trust Policy in Victim Account AWS Portal</small><br>
+    <small type="text">(the attacker cannot change this)</small>
     <small id="AWSPolicy" class="grey-input"></small>
 
-    <script type="text/javascript" id="script7">
+
+<!--  Add your javascript here
+ -->
+ <script type="text/javascript" id="highlight">
+   highlight = function(jsonString, searchFor) {
+    var regex = new RegExp(searchFor, 'g');
+    var highlighted = '<span class="highlighted">' + searchFor + '</span>';
+    var newJsonString = jsonString.replace(regex, highlighted);
+    return prettyPrintOne(newJsonString);
+  };
+  
+  var highlightLine = function(jsonString, searchFor) {
+    var regex = new RegExp('(.*' + searchFor + '.*)', 'g');
+    var highlighted = '<span class="highlighted">$1</span>';
+    var newJsonString = jsonString.replace(regex, highlighted);
+    console.log(jsonString.match(regex));
+    return prettyPrintOne(newJsonString);
+  };
+  
+    var externalIdValue = document.getElementById('UUID')
+    // "fc2a0258-aee3-41f9-a37a-7db9c9e16cee"
 
     var jsonVar = {
       "Version": "2012-10-17",
@@ -172,7 +309,10 @@
         }
       ]
     },
+    //jsonVar['Statement'][0]['Condition']['SrtingLike']['sts:ExternalId'][0] = externalIdValue;
     jsonStr = JSON.stringify(jsonVar);
+    // $('#jsonCode').html(highlight(jsonString, 'X-RateLimit'));
+    // $('#jsonCode2').html(highlightLine(jsonString, 'follow'));
     regeStr = '', // A EMPTY STRING TO EVENTUALLY HOLD THE FORMATTED STRINGIFIED OBJECT
     f = {
             brace: 0
@@ -196,10 +336,10 @@
         return rtnStr;
     });
 
-    document.getElementById('AWSPolicy').innerHTML += regeStr
+    document.getElementById('AWSPolicy').innerHTML += highlight(regeStr, 'ExternalId')
     </script>
 
-
+   <pre id="jsonCode" class="prettyprint lang-json"></pre>
 
 
     <!-- Test Connection -> Success; Someday real test -->
@@ -325,3 +465,4 @@
 
 </body>
 </html>
+
