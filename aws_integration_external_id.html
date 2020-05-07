@@ -87,6 +87,16 @@
         margin: 20px 0;
       }
 
+        .red-button {
+        cursor: pointer;
+        display: inline-block;
+        background-color: #FC8080; /* Green */
+        border: 0;
+        border-radius: 5px;
+        padding: 10px 20px;
+        margin: 20px 0;
+      }      
+
       input[type="text"] {
         border: 1px #ccc solid;
         width: 300px;
@@ -191,6 +201,19 @@
     </style>
 
         <script data-require="jquery" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+
+    <script type="text/javascript" id="uuid_script">
+        function uuidv4() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+        });
+        }
+        var uuid_val = uuidv4();
+        console.log("uuidv4 javascript " + uuid_val);
+        document.getElementById("input_external_id").innerHTML = uuid_val;
+
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js"></script>
 
@@ -202,42 +225,25 @@
 
      <div class="switch-toggle switch-3 switch-candy">
 
-      <input id="trivial" name="state-d" type="radio" checked="" />
+      <input id="trivial" name="state-d" type="radio" checked="checked" />
       <label for="trivial" onclick="toggleBtnTrivial()">Trivial</label>
 
       <input id="easy" name="state-d" type="radio" checked="" />
-      <label for="easy" onclick="">Easy</label>
+      <label for="easy" onclick="toggleBtnEasy()">Easy</label>
 
-      <input id="tamper" name="state-d" type="radio" checked="checked" />
-      <label for="tamper" class="disabled" onclick="">Tamper</label>
+      <input id="tamper" name="state-d" type="radio" checked="" />
+      <label for="tamper" class="disabled" onclick="toggleBtnTamper()">Tamper</label>
 
       <input id="insider_attack" name="state-d" type="radio" checked="checked" />
-      <label for="insider_attack" class="disabled" onclick="">Insider Attack</label>
+      <label for="insider_attack" class="disabled" onclick="toggleBtnInsider()">Insider Attack</label>
 
       <input id="secure" name="state-d" type="radio" />
-      <label for="secure" onclick="">Secure</label>
+      <label for="secure" onclick="toggleBtnSecure()">Secure</label>
 
       </div>
 <br>
 
-<script>
-  function toggleBtnTrivial() {
-    document.getElementById('UUID').innerHTML = "SecureCloud"
-  }
-  function toggleBtnEasy() {
-    document.getElementById('UUID').innerHTML = "eg. SecureCloud_<AWS Account ID>"
-  }
-  function toggleBtnTamper() {
-    document.getElementById('UUID').innerHTML = "SecureCloud"
-  }
-  function toggleBtnInsider() {
-    document.getElementById('UUID').innerHTML = "SecureCloud"
-  }
-  function toggleBtnSecure() {
-    document.getElementById('UUID').innerHTML = "SecureCloud"
-  }
 
-</script>
 
     <br>
     Your AWS Account Id <div class="tooltip">
@@ -245,20 +251,20 @@
                <span class="tooltiptext">See the policy below</span>
                         </div>
     <br>
-    <input type="text" id="text" placeholder="eg. 123456789012">
+    <input type="text" id="input_account" placeholder="eg. 123456789012">
     <span id="output"></span>
     <br>
     Role Name <very-small>You create this in your account for Super Secure Cloud to access your data</very-small>
     <br>
-    <input type="text" id="text" placeholder="eg. SSC_role">
-    <span id="output"></span>
+    <input type="text" id="role" placeholder="eg. SSC_role">
+    <span id="input_role"></span>
     <br>
 
-    ExternaId <small>Copy the ExternalID into the policy</small>
+    ExternaId <small>Copy the ExternalID into your policy in the AWS Console</small>
 
     <div id="externalid-button" class="grey-input">     
    
-    <small type="text" id="UUID" ></small>
+    <small type="text" id="input_external_id" >SecureCloud</small>
     </div>
 
     <button id="regenerate-btn">Regenerate External ID</button>
@@ -274,6 +280,7 @@
  <script type="text/javascript" id="highlight">
    highlight = function(jsonString, searchFor) {
     var regex = new RegExp(searchFor, 'g');
+    //var highlighted = '</div><div style="text-indent: 40px;"><span class="highlighted">' + searchFor + '</span></div><div style="text-indent: 40px;">';
     var highlighted = '<span class="highlighted">' + searchFor + '</span>';
     var newJsonString = jsonString.replace(regex, highlighted);
     return prettyPrintOne(newJsonString);
@@ -287,7 +294,8 @@
     return prettyPrintOne(newJsonString);
   };
   
-    var externalIdValue = document.getElementById('UUID')
+  var renderJson = function() {
+    var externalIdValue = document.getElementById('input_external_id').innerHTML;
     // "fc2a0258-aee3-41f9-a37a-7db9c9e16cee"
 
     var jsonVar = {
@@ -298,48 +306,97 @@
           "Principal": {
             "AWS": "999999999999"
           },
-          "Action": "sts:AssumeRole",
+          "Action": "sts\:AssumeRole",
           "Condition": {
             "StringLike": {
-              "sts:ExternalId": [
-                "fc2a0258-aee3-41f9-a37a-7db9c9e16cee"
-              ]
+              "sts:ExternalId": ["fc2a0258-aee3-41f9-a37a-7db9c9e16cee"]
             }
           }
         }
       ]
-    },
-    //jsonVar['Statement'][0]['Condition']['SrtingLike']['sts:ExternalId'][0] = externalIdValue;
+    };
+    jsonVar['Statement'][0]['Condition']['StringLike']['sts:ExternalId'][0] = externalIdValue;
     jsonStr = JSON.stringify(jsonVar);
     // $('#jsonCode').html(highlight(jsonString, 'X-RateLimit'));
     // $('#jsonCode2').html(highlightLine(jsonString, 'follow'));
     regeStr = '', // A EMPTY STRING TO EVENTUALLY HOLD THE FORMATTED STRINGIFIED OBJECT
     f = {
-            brace: 0
+            brace: 0,
+            bracket: 0
         }; // AN OBJECT FOR TRACKING INCREMENTS/DECREMENTS,
            // IN PARTICULAR CURLY BRACES (OTHER PROPERTIES COULD BE ADDED)
 
-    regeStr = jsonStr.replace(/({|}[,]*|[^{}:]+:[^{}:,]*[,{]*)/g, function (m, p1) {
-        var rtnFn = function() {
-            return '<div style="text-indent: ' + (f['brace'] * 20) + 'px;">' + p1 + '</div>';
+    regeStr = jsonStr.replace(/({|}[,]*|[^{}]+:[^{}:,]*[,{]*)/g, function (m, p1) {
+        var rtnFn = function(token) {
+            if (token === 'brace') {
+              return '<div style="text-indent: ' + (f['brace'] * 20) + 'px;">' + p1 + '</div>';
+            } else {
+              return '<div style="text-indent: ' + (f['bracket'] * 20) + 'px;">' + p1 + '</div>';
+
+            }
         },
         rtnStr = 0;
         if (p1.lastIndexOf('{') === (p1.length - 1)) {
-            rtnStr = rtnFn();
+            rtnStr = rtnFn('brace');
             f['brace'] += 1;
         } else if (p1.indexOf('}') === 0) {
              f['brace'] -= 1;
-            rtnStr = rtnFn();
-        } else {
-            rtnStr = rtnFn();
+            rtnStr = rtnFn('brace');
+        }
+        // else if (p1.lastIndexOf('[') === (p1.length - 1)) {
+        //     rtnStr = rtnFn('bracket');
+        //     f['bracket'] += 1;
+        // } 
+        // else if (p1.indexOf(']') === 0) {
+        //      f['bracket'] -= 1;
+        //     rtnStr = rtnFn('bracket');
+        // } 
+        else {
+            rtnStr = rtnFn('brace');
         }
         return rtnStr;
     });
-
-    document.getElementById('AWSPolicy').innerHTML += highlight(regeStr, 'ExternalId')
+    console.log(highlight(regeStr, externalIdValue));
+    document.getElementById('AWSPolicy').innerHTML = highlight(regeStr, externalIdValue)
+  };
+   renderJson();
     </script>
 
-   <pre id="jsonCode" class="prettyprint lang-json"></pre>
+
+<script>
+  function resetState () {
+      document.getElementById('test-connection-btn').class_name = 'green-button';
+      document.getElementById('test-connection-btn').innerHTML = 'Test Connection';
+      renderJson();
+  };
+
+  function toggleBtnTrivial() {
+    document.getElementById('input_external_id').innerHTML = "SecureCloud";
+    resetState();
+    document.getElementById('input_external_id').class_name = 'input';
+    renderJson();    
+  };
+  function toggleBtnEasy() {
+    document.getElementById('input_external_id').innerHTML = "eg. SecureCloud_production";
+    resetState();
+  };
+  function toggleBtnTamper() {
+    document.getElementById('input_external_id').innerHTML = uuidv4();
+    resetState();  
+  };
+  function toggleBtnInsider() {
+    document.getElementById('input_external_id').innerHTML = uuidv4();
+    resetState();
+  };
+  function toggleBtnSecure() {
+    document.getElementById('input_external_id').innerHTML = uuidv4();
+    resetState();
+    renderJson();
+  };
+
+
+</script>
+
 
 
     <!-- Test Connection -> Success; Someday real test -->
@@ -348,11 +405,19 @@
 
         def show(e):
             console.log(e)
-            document["test-connection-btn"].class_name = "green-button"
-            document['test-connection-btn'].text = 'Success!'
+            input_external_id = document["input_external_id"].text
+            console.log(input_external_id)
+            #if input_externalId == "SecureCloud": 
+            #    document["test-connection-btn"].class_name = "green-button"
+            #   document['test-connection-btn'].text = 'Success!'
+            #else:
+            document['test-connection-btn'].class_name = 'red-button'
+            document['test-connection-btn'].text = 'Connection Failed!'
             console.log(document['test-connection-btn'])
 
         document['test-connection-btn'].bind('click', show)
+        
+
         '''
         from browser import document, ajax, console
         from browser.template import Template
@@ -391,18 +456,8 @@
         document['text'].bind('input', show_text)
     </script>
 
-    <script type="text/javascript" id="uuid_script">
-        function uuidv4() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-        });
-        }
-        var uuid_val = uuidv4();
-        console.log("uuidv4 javascript " + uuid_val);
-        document.getElementById("UUID").innerHTML = uuid_val;
 
-    </script>
+
     
     <script type="text/python" id="script2">
         from browser import document, console, window
@@ -413,7 +468,7 @@
         def regenerate_externalid(e):
             uuid_val = window.uuidv4()
             console.log(uuid_val)
-            document["UUID"].text = uuid_val
+            document["input_external_id"].text = uuid_val
 
         document['regenerate-btn'].bind('click', regenerate_externalid)
 
@@ -447,18 +502,7 @@
         #document['regenerate-btn'].bind('click', get_joke)
     </script>
 
-    <script type="text/javascript" id="uuid_script">
-        function uuidv4() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-        });
-        }
-        var uuid_val = uuidv4()
-        console.log("uuidv4 javascript " + uuid_val);
-        document.getElementById("UUID").innerHTML = uuid_val;
 
-    </script>
 
 
 
