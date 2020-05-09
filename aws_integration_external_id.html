@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- https://www.youtube.com/watch?v=VJj-H4we71g -->
+<!-- Brython code comes from https://www.youtube.com/watch?v=VJj-H4we71g -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -104,7 +104,18 @@
         border-radius: 5px;
         padding: 10px 20px;
         margin: 20px 0;
-      }      
+      }     
+
+      .white-button {
+        cursor: pointer;
+        display: inline-block;
+        background-color: #FFFFFF; /* White */
+        border: 1px #ccc;
+        border-radius: 5px;
+        padding: 2px 4px;
+        margin: 2px 0;
+        border-color: #000000;
+      }   
 
       input[type="text"] {
         border: 1px #ccc solid;
@@ -163,25 +174,27 @@
 .tooltip {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+  border: 1px black; /* If you want dots under the hoverable text */
+  /*border-top: 2px solid #000;*/
 }
 
 /* Tooltip text */
 .tooltip .tooltiptext {
   visibility: hidden;
-  width: 120px;
-  background-color: #555;
-  color: #fff;
+  width: 320px;
+  background-color: #FFFFA0; 
+  color: #000000;
   text-align: center;
-  padding: 5px 0;
-  border-radius: 6px;
+  padding: 10px 0;
+  border-radius: 6px solid #000;
 
   /* Position the tooltip text */
   position: absolute;
   z-index: 1;
-  bottom: 125%;
+  bottom: 10%;
   left: 50%;
-  margin-left: -60px;
+  margin-left: 75px;
+  margin-bottom: -560px
 
   /* Fade in tooltip */
   opacity: 0;
@@ -192,8 +205,8 @@
 .tooltip .tooltiptext::after {
   content: "";
   position: absolute;
-  top: 100%;
-  left: 50%;
+  top: 200%;
+  left: 250%;
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
@@ -233,13 +246,13 @@
       <input id="trivial" name="state-d" type="radio" checked="checked" />
       <label for="trivial" onclick="toggleBtnTrivial()">Trivial</label>
 
-      <input id="easy" class="disabled" name="state-d" type="radio" checked="" />
+      <input id="easy" class="disabled" name="state-d" type="radio" />
       <label for="easy" onclick="toggleBtnEasy()">Easy</label>
 
-      <input id="tamper" class="disabled" name="state-d" type="radio" checked="" />
+      <input id="tamper" class="disabled" name="state-d" type="radio" />
       <label for="tamper" onclick="toggleBtnTamper()">Tamper</label>
 
-      <input id="insider_attack" class="disabled" name="state-d" type="radio" checked="" />
+      <input id="insider_attack" class="disabled" name="state-d" type="radio"  />
       <label for="insider_attack" onclick="toggleBtnInsider()">Insider Attack</label>
 
       <input id="secure" class="disabled" name="state-d" type="radio" />
@@ -252,11 +265,11 @@
 
     <br>
     Your AWS Account Id <div class="tooltip">
-               <small type="text">Guess the account Id</small>
-               <span class="tooltiptext">See the policy below</span>
+               <button id="guess_account_id" type="text" class="white-button">Guess the account Id</button>
+               <span class="tooltiptext">It must match the policy below. Blog coming soon: A million and one ways to find AWS Account IDs.</span>
                         </div>
     <br>
-    <input type="text" id="input_account" placeholder="eg. 123456789012">
+    <input type="text" id="account_id" placeholder="eg. 123456789012">
     <span id="output"></span>
     <br>
     Role Name <very-small>You create this in your account for Super Secure Cloud to access your data</very-small>
@@ -265,20 +278,16 @@
     <span id="input_role"></span>
     <br>
     ExternalId <very-small>Copy the ExternalID into your policy in the AWS Console</very-small>
-    <!-- <div id="externalid-input" class="grey-input">     
- -->
+
     <br>
     <input type="text" id="input_external_id" value="SecureCloud" placeholder="SecureCloud" class="grey-input" readonly>
     <span id="input_external"></span>
-    <br>
 
-<!--     </div>
- -->
   <button id="regenerate-btn">Regenerate External ID</button>
     <button id="test-connection-btn">Test Connection</button>
     <br>
-    <small type="text" padding="1px">SSC_role Assume Role Trust Policy in Victim Account AWS Portal</small><br>
-    <very-small type="text">(the attacker cannot change this)</very-small>
+    <small type="text" padding="0px">SSC_role Assume Role Trust Policy in Victim Account AWS Portal</small><br>
+    <very-small type="text">role: SSC_role  (the attacker cannot change this)</very-small>
     <pre id="AWSPolicy" class="grey-input"></pre>
 
 
@@ -340,6 +349,7 @@
   function resetState () {
       document.getElementById('test-connection-btn').style.backgroundColor = '#24a0ed';
       document.getElementById('test-connection-btn').innerHTML = 'Test Connection';
+      document.getElementById('input_external_id').value = "" ;  
       renderJson();
   };
  
@@ -356,26 +366,26 @@
   };
 
   function toggleBtnTrivial() {
-    document.getElementById('input_external_id').setAttribute('placeholder', "SecureCloud");
+    document.getElementById('input_external_id').setAttribute('placeholder', "SecureCloud");  
     window.external_id_policy_value = "SecureCloud"
     resetState();
     setExternalBox('white');
   };
   function toggleBtnEasy() {
-    document.getElementById('input_external_id').setAttribute('placeholder', "eg. SecureCloud_prod");
+    document.getElementById('input_external_id').setAttribute('placeholder', "eg. SecureCloud_prod");  
     window.external_id_policy_value = "SecureCloud_Dev"
     resetState();
     setExternalBox('white');
   };
   function toggleBtnTamper() {
-    document.getElementById('input_external_id').setAttribute('placeholder', '988594');
+    document.getElementById('input_external_id').setAttribute('placeholder', '988594');  
     window.external_id_policy_value = "498271"
     resetState();
     setExternalBox('grey');
   };
   function toggleBtnInsider() {
     var ext = uuidv4();
-    document.getElementById('input_external_id').setAttribute('placeholder', ext);
+    document.getElementById('input_external_id').setAttribute('placeholder', ext);  
     window.external_id_policy_value = 'fc2a0258-aee3-41f9-a37a-7db9c9e16cee';
     resetState();
     setExternalBox('white');
@@ -401,13 +411,25 @@
             document['test-connection-btn'].style.backgroundColor = "#24a0ed"
             document['test-connection-btn'].text = 'Test Connection'          
 
+        def test_connection():
+            input_external_id = document["input_external_id"].value
+            input_role = document["role"].value
+            input_account_id = document["account_id"].value
+            if (input_external_id == window.external_id_policy_value) and \
+               (input_role == "SSC_role") and \
+               (input_account_id == "999999999999"):
+                return True
+            else:
+                return False
+
         def show(e):
             console.log(e)
             input_external_id = document["input_external_id"].value
             console.log("TEST")
             console.log(input_external_id)
             console.log(window.external_id_policy_value)
-            if window.external_id_policy_value == input_external_id: 
+            #if window.external_id_policy_value == input_external_id: 
+            if test_connection(): 
                 document["test-connection-btn"].style.backgroundColor = "#4CAF50"
                 document['test-connection-btn'].text = 'Success!'
             else:
@@ -470,7 +492,7 @@
         def regenerate_externalid(e):
             uuid_val = window.uuidv4()
             console.log(uuid_val)
-            document["input_external_id"].text = uuid_val
+            document["input_external_id"].value = uuid_val
 
         document['regenerate-btn'].bind('click', regenerate_externalid)
 
