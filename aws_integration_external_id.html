@@ -52,10 +52,19 @@
         color: black; /* Gray */
         margin: 1px 0;
         padding: 1px 1px;
-        width: 350px;   
+        width: 550px;   
         display: block;
-
+       font-size: 15px;
         } 
+
+    .white-input[type="text"] {
+        border: 1px #ccc solid;
+        width: 300px;
+        padding: 4px;
+        height: 35px;
+        margin-top: 10px;
+        opacity: 0.9;
+      }
 
     .policy {
         background-color: #e7e7e7; 
@@ -67,7 +76,7 @@
 
         } 
 
-        button {
+      button {
         cursor: pointer;
         display: inline-block;
         background-color: #24a0ed; 
@@ -90,7 +99,7 @@
         .red-button {
         cursor: pointer;
         display: inline-block;
-        background-color: #FC8080; /* Green */
+        background-color: #D01010; /* RED */
         border: 0;
         border-radius: 5px;
         padding: 10px 20px;
@@ -99,13 +108,12 @@
 
       input[type="text"] {
         border: 1px #ccc solid;
-        width: 300px;
+        width: 350px;
         padding: 4px;
         height: 35px;
         margin-top: 10px;
-        opacity: 0.5;
+        opacity: 0.9;
       }
-
 
 
     #overlay {
@@ -146,7 +154,7 @@
     cursor: pointer;
   }
   .switch-toggle input:checked + label {
-    background: green;
+    background: blue;
 }
 .highlighted {
   background-color: #ff0;
@@ -200,7 +208,7 @@
 
     </style>
 
-        <script data-require="jquery" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+        <!-- <script data-require="jquery" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script> -->
 
     <script type="text/javascript" id="uuid_script">
         function uuidv4() {
@@ -209,9 +217,6 @@
         return v.toString(16);
         });
         }
-        var uuid_val = uuidv4();
-        console.log("uuidv4 javascript " + uuid_val);
-        document.getElementById("input_external_id").innerHTML = uuid_val;
 
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.css" />
@@ -228,16 +233,16 @@
       <input id="trivial" name="state-d" type="radio" checked="checked" />
       <label for="trivial" onclick="toggleBtnTrivial()">Trivial</label>
 
-      <input id="easy" name="state-d" type="radio" checked="" />
+      <input id="easy" class="disabled" name="state-d" type="radio" checked="" />
       <label for="easy" onclick="toggleBtnEasy()">Easy</label>
 
-      <input id="tamper" name="state-d" type="radio" checked="" />
-      <label for="tamper" class="disabled" onclick="toggleBtnTamper()">Tamper</label>
+      <input id="tamper" class="disabled" name="state-d" type="radio" checked="" />
+      <label for="tamper" onclick="toggleBtnTamper()">Tamper</label>
 
-      <input id="insider_attack" name="state-d" type="radio" checked="checked" />
-      <label for="insider_attack" class="disabled" onclick="toggleBtnInsider()">Insider Attack</label>
+      <input id="insider_attack" class="disabled" name="state-d" type="radio" checked="" />
+      <label for="insider_attack" onclick="toggleBtnInsider()">Insider Attack</label>
 
-      <input id="secure" name="state-d" type="radio" />
+      <input id="secure" class="disabled" name="state-d" type="radio" />
       <label for="secure" onclick="toggleBtnSecure()">Secure</label>
 
       </div>
@@ -259,20 +264,22 @@
     <input type="text" id="role" placeholder="eg. SSC_role">
     <span id="input_role"></span>
     <br>
+    ExternalId <very-small>Copy the ExternalID into your policy in the AWS Console</very-small>
+    <!-- <div id="externalid-input" class="grey-input">     
+ -->
+    <br>
+    <input type="text" id="input_external_id" value="SecureCloud" placeholder="SecureCloud" class="grey-input" readonly>
+    <span id="input_external"></span>
+    <br>
 
-    ExternaId <small>Copy the ExternalID into your policy in the AWS Console</small>
-
-    <div id="externalid-button" class="grey-input">     
-   
-    <small type="text" id="input_external_id" >SecureCloud</small>
-    </div>
-
-    <button id="regenerate-btn">Regenerate External ID</button>
+<!--     </div>
+ -->
+  <button id="regenerate-btn">Regenerate External ID</button>
     <button id="test-connection-btn">Test Connection</button>
     <br>
-    <small type="text">SSC_role Assume Role Trust Policy in Victim Account AWS Portal</small><br>
-    <small type="text">(the attacker cannot change this)</small>
-    <small id="AWSPolicy" class="grey-input"></small>
+    <small type="text" padding="1px">SSC_role Assume Role Trust Policy in Victim Account AWS Portal</small><br>
+    <very-small type="text">(the attacker cannot change this)</very-small>
+    <pre id="AWSPolicy" class="grey-input"></pre>
 
 
 <!--  Add your javascript here
@@ -280,7 +287,6 @@
  <script type="text/javascript" id="highlight">
    highlight = function(jsonString, searchFor) {
     var regex = new RegExp(searchFor, 'g');
-    //var highlighted = '</div><div style="text-indent: 40px;"><span class="highlighted">' + searchFor + '</span></div><div style="text-indent: 40px;">';
     var highlighted = '<span class="highlighted">' + searchFor + '</span>';
     var newJsonString = jsonString.replace(regex, highlighted);
     return prettyPrintOne(newJsonString);
@@ -293,10 +299,13 @@
     console.log(jsonString.match(regex));
     return prettyPrintOne(newJsonString);
   };
-  
+  var input_external_id = document.getElementById('input_external_id').innerHTML;
+  var external_id_policy_value = "SecureCloud";
+
   var renderJson = function() {
-    var externalIdValue = document.getElementById('input_external_id').innerHTML;
-    // "fc2a0258-aee3-41f9-a37a-7db9c9e16cee"
+
+    console.log("exteranl_id_policy_value " + window.external_id_policy_value)
+    console.log("input_external_id " + document.getElementById("input_external_id").value);
 
     var jsonVar = {
       "Version": "2012-10-17",
@@ -304,60 +313,24 @@
         {
           "Effect": "Allow",
           "Principal": {
-            "AWS": "999999999999"
+            "AWS": "arn:aws:iam::999999999999:root"
           },
-          "Action": "sts\:AssumeRole",
+          "Action": "sts:AssumeRole",
           "Condition": {
             "StringLike": {
-              "sts:ExternalId": ["fc2a0258-aee3-41f9-a37a-7db9c9e16cee"]
+              "sts:ExternalId": ["SecureCloud"]
             }
           }
         }
       ]
     };
-    jsonVar['Statement'][0]['Condition']['StringLike']['sts:ExternalId'][0] = externalIdValue;
-    jsonStr = JSON.stringify(jsonVar);
-    // $('#jsonCode').html(highlight(jsonString, 'X-RateLimit'));
-    // $('#jsonCode2').html(highlightLine(jsonString, 'follow'));
-    regeStr = '', // A EMPTY STRING TO EVENTUALLY HOLD THE FORMATTED STRINGIFIED OBJECT
-    f = {
-            brace: 0,
-            bracket: 0
-        }; // AN OBJECT FOR TRACKING INCREMENTS/DECREMENTS,
-           // IN PARTICULAR CURLY BRACES (OTHER PROPERTIES COULD BE ADDED)
 
-    regeStr = jsonStr.replace(/({|}[,]*|[^{}]+:[^{}:,]*[,{]*)/g, function (m, p1) {
-        var rtnFn = function(token) {
-            if (token === 'brace') {
-              return '<div style="text-indent: ' + (f['brace'] * 20) + 'px;">' + p1 + '</div>';
-            } else {
-              return '<div style="text-indent: ' + (f['bracket'] * 20) + 'px;">' + p1 + '</div>';
+    jsonVar['Statement'][0]['Condition']['StringLike']['sts:ExternalId'][0] = window.external_id_policy_value;
 
-            }
-        },
-        rtnStr = 0;
-        if (p1.lastIndexOf('{') === (p1.length - 1)) {
-            rtnStr = rtnFn('brace');
-            f['brace'] += 1;
-        } else if (p1.indexOf('}') === 0) {
-             f['brace'] -= 1;
-            rtnStr = rtnFn('brace');
-        }
-        // else if (p1.lastIndexOf('[') === (p1.length - 1)) {
-        //     rtnStr = rtnFn('bracket');
-        //     f['bracket'] += 1;
-        // } 
-        // else if (p1.indexOf(']') === 0) {
-        //      f['bracket'] -= 1;
-        //     rtnStr = rtnFn('bracket');
-        // } 
-        else {
-            rtnStr = rtnFn('brace');
-        }
-        return rtnStr;
-    });
-    console.log(highlight(regeStr, externalIdValue));
-    document.getElementById('AWSPolicy').innerHTML = highlight(regeStr, externalIdValue)
+    jsonStr = JSON.stringify(jsonVar, null, 2);
+
+    var hlight = highlight(jsonStr, window.external_id_policy_value);
+    document.getElementById('AWSPolicy').innerHTML = hlight;
   };
    renderJson();
     </script>
@@ -365,33 +338,54 @@
 
 <script>
   function resetState () {
-      document.getElementById('test-connection-btn').class_name = 'green-button';
+      document.getElementById('test-connection-btn').style.backgroundColor = '#24a0ed';
       document.getElementById('test-connection-btn').innerHTML = 'Test Connection';
       renderJson();
   };
+ 
+  function setExternalBox (color) {
+    if (color === 'white') {
+      document.getElementById('input_external_id').class_name = 'white-input';
+      document.getElementById('input_external_id').style.backgroundColor = "white";
+      document.getElementById('input_external_id').removeAttribute('readonly');
+    } else {
+      document.getElementById('input_external_id').style.backgroundColor = "lightgrey";
+      document.getElementById('input_external_id').setAttribute('readonly', true);
+    }
+
+  };
 
   function toggleBtnTrivial() {
-    document.getElementById('input_external_id').innerHTML = "SecureCloud";
+    document.getElementById('input_external_id').setAttribute('placeholder', "SecureCloud");
+    window.external_id_policy_value = "SecureCloud"
     resetState();
-    document.getElementById('input_external_id').class_name = 'input';
-    renderJson();    
+    setExternalBox('white');
   };
   function toggleBtnEasy() {
-    document.getElementById('input_external_id').innerHTML = "eg. SecureCloud_production";
+    document.getElementById('input_external_id').setAttribute('placeholder', "eg. SecureCloud_prod");
+    window.external_id_policy_value = "SecureCloud_Dev"
     resetState();
+    setExternalBox('white');
   };
   function toggleBtnTamper() {
-    document.getElementById('input_external_id').innerHTML = uuidv4();
-    resetState();  
+    document.getElementById('input_external_id').setAttribute('placeholder', '988594');
+    window.external_id_policy_value = "498271"
+    resetState();
+    setExternalBox('grey');
   };
   function toggleBtnInsider() {
-    document.getElementById('input_external_id').innerHTML = uuidv4();
+    var ext = uuidv4();
+    document.getElementById('input_external_id').setAttribute('placeholder', ext);
+    window.external_id_policy_value = 'fc2a0258-aee3-41f9-a37a-7db9c9e16cee';
     resetState();
+    setExternalBox('white');
   };
   function toggleBtnSecure() {
-    document.getElementById('input_external_id').innerHTML = uuidv4();
+    var ext = uuidv4();
+    document.getElementById('input_external_id').setAttribute('placeholder',  ext);
+    window.external_id_policy_value = 'fc2a0258-aee3-41f9-a37a-7db9c9e16cee';
     resetState();
-    renderJson();
+    setExternalBox('grey');
   };
 
 
@@ -400,20 +394,28 @@
 
 
     <!-- Test Connection -> Success; Someday real test -->
-    <script type="text/python" id="script0">
-        from browser import document, console, alert
+    <script type="text/python" id="test_connection">
+        from browser import document, console, alert, window, timer
+
+        def reset_button():
+            document['test-connection-btn'].style.backgroundColor = "#24a0ed"
+            document['test-connection-btn'].text = 'Test Connection'          
 
         def show(e):
             console.log(e)
-            input_external_id = document["input_external_id"].text
+            input_external_id = document["input_external_id"].value
+            console.log("TEST")
             console.log(input_external_id)
-            #if input_externalId == "SecureCloud": 
-            #    document["test-connection-btn"].class_name = "green-button"
-            #   document['test-connection-btn'].text = 'Success!'
-            #else:
-            document['test-connection-btn'].class_name = 'red-button'
-            document['test-connection-btn'].text = 'Connection Failed!'
+            console.log(window.external_id_policy_value)
+            if window.external_id_policy_value == input_external_id: 
+                document["test-connection-btn"].style.backgroundColor = "#4CAF50"
+                document['test-connection-btn'].text = 'Success!'
+            else:
+                document['test-connection-btn'].style.backgroundColor = "#D01010"
+                document['test-connection-btn'].text = 'Connection Failed!'
             console.log(document['test-connection-btn'])
+
+            timer.set_timeout(reset_button, 2000)
 
         document['test-connection-btn'].bind('click', show)
         
@@ -453,7 +455,7 @@
         def show_text(e):
             document['output'].textContent = e.target.value;
 
-        document['text'].bind('input', show_text)
+        document['output'].bind('input', show_text)
     </script>
 
 
@@ -501,9 +503,6 @@
 
         #document['regenerate-btn'].bind('click', get_joke)
     </script>
-
-
-
 
 
 
