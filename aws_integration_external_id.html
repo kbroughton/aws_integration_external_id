@@ -110,11 +110,12 @@
         cursor: pointer;
         display: inline-block;
         background-color: #FFFFFF; /* White */
-        border: 1px #ccc;
+        border: 2px solid #00AF50
         border-radius: 5px;
         padding: 2px 4px;
-        margin: 2px 0;
-        border-color: #000000;
+        margin: 2px;
+        border-color: #FF0000;
+        color: black;
       }   
 
       input[type="text"] {
@@ -264,18 +265,23 @@
 
 
     <br>
-    Your AWS Account Id <div class="tooltip">
+    Your AWS Account Id <div class="tooltip" value="">
                <button id="guess_account_id" type="text" class="white-button">Guess the account Id</button>
                <span class="tooltiptext">It must match the policy below. Blog coming soon: A million and one ways to find AWS Account IDs.</span>
                         </div>
     <br>
-    <input type="text" id="account_id" placeholder="eg. 123456789012">
+    <input type="text" id="account_id" placeholder="eg. 123456789012" value="">
     <span id="output"></span>
     <br>
     Role Name <very-small>You create this in your account for Super Secure Cloud to access your data</very-small>
     <br>
-    <input type="text" id="role" placeholder="eg. SSC_role">
-    <span id="input_role"></span>
+    <input type="text" id="role" placeholder="eg. SSC_role" value="">
+    <span id="input_role"></span> 
+    <div class="tooltip" value="" visibility="hidden">
+      <button id="brute_force_role" type="text" class="white-button" visibility="hidden">
+      Brute for the role</button>
+      <span class="tooltiptext">Click to simulate running Pacu to brute-force the role name</span>
+    </div>
     <br>
     ExternalId <very-small>Copy the ExternalID into your policy in the AWS Console</very-small>
 
@@ -283,13 +289,16 @@
     <input type="text" id="input_external_id" value="SecureCloud" placeholder="SecureCloud" class="grey-input" readonly>
     <span id="input_external"></span>
 
-  <button id="regenerate-btn">Regenerate External ID</button>
     <button id="test-connection-btn">Test Connection</button>
+    <button id="regenerate-btn" visibility="hidden" display="block">Regenerate External ID</button>
     <br>
-    <small type="text" padding="0px">SSC_role Assume Role Trust Policy in Victim Account AWS Portal</small><br>
-    <very-small type="text">role: SSC_role  (the attacker cannot change this)</very-small>
-    <pre id="AWSPolicy" class="grey-input"></pre>
 
+    <div width: 320px; padding="10px" border="5px solid orange" margin=0>
+
+      <small type="text" padding="0px">SSC_role Assume Role Trust Policy in Victim Account AWS Portal</small><br>
+      <very-small type="text">role: SSC_role  (the attacker cannot change this)</very-small>
+      <pre id="AWSPolicy" class="grey-input"></pre>
+    </div>
 
 <!--  Add your javascript here
  -->
@@ -401,7 +410,40 @@
 
 </script>
 
+    <script type="text/python" id="guess_account_id_script">
+      from browser import document, console, alert, window, timer
 
+      def guess_account(e):
+          if document['account_id'].value == "":
+              document['account_id'].value = "513589784635"
+              document['account_id'].text = "513589784635"
+          else:  
+              # document['account_id'].value == "513589784635":
+              document['account_id'].value = "999999999999"
+          console.log("guess_account " + document['account_id'].value)
+
+      document['guess_account_id'].bind('click', guess_account)
+
+    </script>
+
+<!--       This is intended to set the value, wait a split second then repeat
+      five times until it settles on SSC_role. WIP, not working yet. -->
+    <script type="text/python" id="brute_force_role_script">
+
+      from browser import document, console, alert, window, timer
+
+      def set_role_value(value):
+          #document['role'].text = value
+          document['role'].value = value   
+          console.log(document['role'].value)
+
+      def brute_force_role(e):
+          for role in ["SSC", "SSC-role", "SecureCloud-role", "SecureCloudRole", "SSC_role_Dev", "SSC_role_prod", "SSC_role"]: 
+              timer.set_timeout(set_role_value(role), 1000)
+
+      document['brute_force_role'].bind('click', brute_force_role)
+
+    </script>
 
     <!-- Test Connection -> Success; Someday real test -->
     <script type="text/python" id="test_connection">
