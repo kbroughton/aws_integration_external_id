@@ -178,6 +178,12 @@
   border: 1px black; /* If you want dots under the hoverable text */
   /*border-top: 2px solid #000;*/
 }
+.visible {
+  display: block;
+}
+.hidden {
+  display: none;
+}
 
 /* Tooltip text */
 .tooltip .tooltiptext {
@@ -225,11 +231,13 @@
         <!-- <script data-require="jquery" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script> -->
 
     <script type="text/javascript" id="uuid_script">
+
         function uuidv4() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
         });
+
         }
 
     </script>
@@ -263,6 +271,9 @@
 <br>
 
 
+    <script id="global-js">
+      var game_state = "Trivial"
+    </script>
 
     <br>
     Your AWS Account Id <div class="tooltip" value="">
@@ -293,12 +304,27 @@
     <button id="regenerate-btn" visibility="hidden" display="block">Regenerate External ID</button>
     <br>
 
+    <script>
+      function setImageVisible(id, visible) {
+    var img = document.getElementById(id);
+    img.style.visibility = (visible ? 'visible' : 'hidden');
+    }
+    </script>
+
+    <img id="intercepted" src="burp_intercepted.png" visibility="hidden" style="display:none">
+    <img id="changed" src="burp_changed.png" visibility="hidden" style="display:none">
+
+    <hr style="height:2px;border-width:1;color:orange">
+
     <div width: 320px; padding="10px" border="5px solid orange" margin=0>
 
       <small type="text" padding="0px">SSC_role Assume Role Trust Policy in Victim Account AWS Portal</small><br>
       <very-small type="text">role: SSC_role  (the attacker cannot change this)</very-small>
       <pre id="AWSPolicy" class="grey-input"></pre>
     </div>
+
+
+
 
 <!--  Add your javascript here
  -->
@@ -356,6 +382,8 @@
 
 <script>
   function resetState () {
+      setImageVisible('intercepted', false)
+      setImageVisible('changed', false)
       document.getElementById('test-connection-btn').style.backgroundColor = '#24a0ed';
       document.getElementById('test-connection-btn').innerHTML = 'Test Connection';
       document.getElementById('input_external_id').value = "" ;  
@@ -375,24 +403,28 @@
   };
 
   function toggleBtnTrivial() {
+    window.game_state = "Trivial"
     document.getElementById('input_external_id').setAttribute('placeholder', "SecureCloud");  
     window.external_id_policy_value = "SecureCloud"
     resetState();
     setExternalBox('white');
   };
   function toggleBtnEasy() {
+    window.game_state = "Easy"
     document.getElementById('input_external_id').setAttribute('placeholder', "eg. SecureCloud_prod");  
     window.external_id_policy_value = "SecureCloud_Dev"
     resetState();
     setExternalBox('white');
   };
   function toggleBtnTamper() {
-    document.getElementById('input_external_id').setAttribute('placeholder', '988594');  
-    window.external_id_policy_value = "498271"
+    window.game_state = "Tamper"
+    document.getElementById('input_external_id').setAttribute('placeholder', "22813a05-959f-4a1e-9698-fc811388c298");  
+    window.external_id_policy_value = "fc2a0258-aee3-41f9-a37a-7db9c9e16cee"
     resetState();
     setExternalBox('grey');
   };
   function toggleBtnInsider() {
+    window.game_state = "Insider"
     var ext = uuidv4();
     document.getElementById('input_external_id').setAttribute('placeholder', ext);  
     window.external_id_policy_value = 'fc2a0258-aee3-41f9-a37a-7db9c9e16cee';
@@ -400,13 +432,13 @@
     setExternalBox('white');
   };
   function toggleBtnSecure() {
+    window.game_state = "Secure"
     var ext = uuidv4();
     document.getElementById('input_external_id').setAttribute('placeholder',  ext);
     window.external_id_policy_value = 'fc2a0258-aee3-41f9-a37a-7db9c9e16cee';
     resetState();
     setExternalBox('grey');
   };
-
 
 </script>
 
@@ -453,7 +485,31 @@
             document['test-connection-btn'].style.backgroundColor = "#24a0ed"
             document['test-connection-btn'].text = 'Test Connection'          
 
+        def set_image_visible(image_id, value):
+            visibility = 'hidden'
+            display = "none"
+            if value:
+                visibility = 'visible'
+                display = "block"
+            document[image_id].style.visibility = visibility
+            document[image_id].style.display = display
+
+        def dummy():
+            print("here")
+            
+
+
         def test_connection():
+            game_state = window.game_state
+            if game_state == "Tamper":
+                set_image_visible('intercepted', True)
+                timer.set_timeout(dummy, 2000)
+                #set_image_visible('intercepted', False)
+                set_image_visible('changed', True)
+                timer.set_timeout(dummy, 2000)
+                #set_image_visible('changed', False)
+                return True
+
             input_external_id = document["input_external_id"].value
             input_role = document["role"].value
             input_account_id = document["account_id"].value
