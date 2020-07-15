@@ -482,7 +482,8 @@
     </script>
 
 <!--       This is intended to set the value, wait a split second then repeat
-      five times until it settles on SSC_role. WIP, not working yet. -->
+      five times until it settles on SSC_role. WIP, not working yet.  
+
     <script type="text/python" id="brute_force_role_script">
 
       from browser import document, console, alert, window, timer
@@ -498,8 +499,25 @@
 
       document['brute_force_role'].bind('click', brute_force_role)
 
-    </script>
+    </script>  -->
 
+    <script>
+        var role_txt = document.getElementById('role');
+        var button = document.getElementById('brute_force_role');
+        button.addEventListener('click', function(e) {
+            brute_force_role();
+        })
+        
+        function brute_force_role() {
+          var roles = ["SSC", "SSC-role", "SecureCloud-role", "SecureCloudRole", "SSC_role_Dev", "SSC_role_prod", "SSC_role"];
+          role_txt.value = roles[0];
+          for(let i = 1 ; i < roles.length ; i++){
+              setTimeout(function() {
+                  role_txt.value = roles[i];
+              }, i*1000);
+          }
+        } 
+    </script>
     <!-- Test Connection -> Success; Someday real test -->
     <script type="text/python" id="test_connection">
         from browser import document, console, alert, window, timer
