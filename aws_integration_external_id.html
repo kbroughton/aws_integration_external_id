@@ -320,6 +320,7 @@
     </script>
 
     <img id="intercepted" src="burp_intercepted.png" visibility="hidden" style="display:none">
+    <button id="intercepted-btn" src="burp_intercepted.png" visibility="hidden" style="display:none">Replace with stolen externalID</button>
     <img id="changed" src="burp_changed.png" visibility="hidden" style="display:none">
 
     <hr style="height:2px;border-width:1;color:orange">
@@ -419,6 +420,7 @@
     var btn = document.getElementById('regenerate-btn');
     btn.classList.add('hide-btn');
     btn.classList.remove('show-btn');
+    document.getElementById('intercepted-btn').style.visibility = "hidden";
   };
   function toggleBtnEasy() {
     window.game_state = "Easy"
@@ -429,6 +431,7 @@
     var btn = document.getElementById('regenerate-btn');
     btn.classList.add('hide-btn');
     btn.classList.remove('show-btn');
+    document.getElementById('intercepted-btn').style.visibility = "hidden";
   };
   function toggleBtnTamper() {
     window.game_state = "Tamper"
@@ -450,6 +453,7 @@
     var btn = document.getElementById('regenerate-btn');
     btn.classList.add('hide-btn');
     btn.classList.remove('show-btn');
+    document.getElementById('intercepted-btn').style.visibility = "hidden";
   };
   function toggleBtnSecure() {
     window.game_state = "Secure"
@@ -461,6 +465,7 @@
     var btn = document.getElementById('regenerate-btn');
     btn.classList.remove('hide-btn');
     btn.classList.add('show-btn');
+    document.getElementById('intercepted-btn').style.visibility = "hidden";
   };
 
 </script>
@@ -481,7 +486,7 @@
 
     </script>
 
-<!--       This is intended to set the value, wait a split second then repeat
+<!--  This is intended to set the value, wait a split second then repeat
       five times until it settles on SSC_role. WIP, not working yet.  
 
     <script type="text/python" id="brute_force_role_script">
@@ -501,6 +506,10 @@
 
     </script>  -->
 
+    <!-- 
+      Script in js that changes the input value in the role name field with 1 second of delay. Activates when clicking 
+      "Brute for the role" button
+    -->
     <script>
         var role_txt = document.getElementById('role');
         var button = document.getElementById('brute_force_role');
@@ -518,7 +527,62 @@
           }
         } 
     </script>
-    <!-- Test Connection -> Success; Someday real test -->
+
+    <!-- Test Connection (only for Tamper mode) -> Success; Someday real test -->
+    <script>
+        var testc_btn = document.getElementById('test-connection-btn');
+        var game_state = window.game_state;
+        var replace_btn = document.getElementById('intercepted-btn');
+
+        testc_btn.addEventListener('click', function(e) {
+            show();
+        });
+
+        replace_btn.addEventListener('click', function(e) {
+            var img_changed = document.getElementById('changed');
+            img_changed.style.visibility = "visible";
+            img_changed.style.display = "block";
+            setTimeout(function() {
+                testc_btn.style.backgroundColor  = "#4CAF50";
+                testc_btn.textContent = "Success!";
+                document.getElementById('input_external_id').value = "fc2a0258-aee3-41f9-a37a-7db9c9e16cee"
+            }, 1000);
+            setTimeout(reset_button, 3000);
+        })
+
+        function show () {
+            var input_account_id = document.getElementById('account_id').value;
+            var input_role = document.getElementById('role').value;
+            if (game_state == "Tamper") {
+                if(test_connection()){
+                    var img_intercepted = document.getElementById('intercepted');
+                    img_intercepted.style.visibility = "visible";
+                    img_intercepted.style.display = "block";
+                    replace_btn.style.visibility= "visible";
+                    replace_btn.style.display= "block";
+                }
+                else {
+                    testc_btn.style.backgroundColor = "#D01010";
+                    testc_btn.textContent = 'Connection Failed!';
+                    setTimeout(reset_button, 2000);
+                }
+            }
+        }
+
+        function reset_button () {
+            testc_btn.style.backgroundColor = "#24a0ed";
+            testc_btn.textContent = 'Test Connection';
+        }
+
+        function test_connection () {
+          var input_account_id = document.getElementById('account_id').value;
+          var input_role = document.getElementById('role').value;
+            if (input_role == "SSC_role" && input_account_id == "999999999999") { return true; }
+            else { return false; }
+        }
+    </script>
+
+    <!-- Test Connection (not Tamper mode) -> Success; Someday real test -->
     <script type="text/python" id="test_connection">
         from browser import document, console, alert, window, timer
 
@@ -542,7 +606,16 @@
 
         def test_connection():
             game_state = window.game_state
+            input_external_id = document["input_external_id"].value
+            input_role = document["role"].value
+            input_account_id = document["account_id"].value
+
+            '''
+            This block is commented because the Tamper game state is treated in a js script
+
             if game_state == "Tamper":
+                if (input_role != "SSC_role") or (input_account_id != "999999999999"):
+                    return False
                 set_image_visible('intercepted', True)
                 timer.set_timeout(dummy, 2000)
                 #set_image_visible('intercepted', False)
@@ -550,10 +623,8 @@
                 timer.set_timeout(dummy, 2000)
                 #set_image_visible('changed', False)
                 return True
+            '''
 
-            input_external_id = document["input_external_id"].value
-            input_role = document["role"].value
-            input_account_id = document["account_id"].value
             if (input_external_id == window.external_id_policy_value) and \
                (input_role == "SSC_role") and \
                (input_account_id == "999999999999"):
@@ -562,21 +633,23 @@
                 return False
 
         def show(e):
-            console.log(e)
-            input_external_id = document["input_external_id"].value
-            console.log("TEST")
-            console.log(input_external_id)
-            console.log(window.external_id_policy_value)
-            #if window.external_id_policy_value == input_external_id: 
-            if test_connection(): 
-                document["test-connection-btn"].style.backgroundColor = "#4CAF50"
-                document['test-connection-btn'].text = 'Success!'
-            else:
-                document['test-connection-btn'].style.backgroundColor = "#D01010"
-                document['test-connection-btn'].text = 'Connection Failed!'
-            console.log(document['test-connection-btn'])
+            game_state = window.game_state
+            if game_state != "Tamper":
+                console.log(e)
+                input_external_id = document["input_external_id"].value
+                console.log("TEST")
+                console.log(input_external_id)
+                console.log(window.external_id_policy_value)
+                #if window.external_id_policy_value == input_external_id: 
+                if test_connection(): 
+                    document["test-connection-btn"].style.backgroundColor = "#4CAF50"
+                    document['test-connection-btn'].text = 'Success!'
+                else:
+                    document['test-connection-btn'].style.backgroundColor = "#D01010"
+                    document['test-connection-btn'].text = 'Connection Failed!'
+                console.log(document['test-connection-btn'])
 
-            timer.set_timeout(reset_button, 2000)
+                timer.set_timeout(reset_button, 2000)
 
         document['test-connection-btn'].bind('click', show)
         
