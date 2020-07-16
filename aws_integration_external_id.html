@@ -10,221 +10,229 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.8/brython_stdlib.js" integrity="sha256-Gnrw9tIjrsXcZSCh/wos5Jrpn0bNVNFJuNJI9d71TDs=" crossorigin="anonymous"></script>
 
     <style>
-        * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+          * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
 
-      body {
-          font-family: Arial, Helvetica, sans-serif;
-          font-size: 25px;
-          padding: 30px;
-          line-height: 1.6;
-      }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 25px;
+            padding: 30px;
+            line-height: 1.6;
+        }
 
-      small {
-          font-family: Arial, Helvetica, sans-serif;
-          font-size: 15px;
+        small {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            padding: 20px;
+            line-height: 1.1;
+        }
+
+        very-small {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            padding: 2px;
+            line-height: 0.9;
+        }
+
+        h1 {
+          text-align: center;
+          margin-bottom: 30px;
+          border-bottom: 1px #ccc solid;
+        }
+
+        h2 {
+          margin-top: 20px;
+        }
+      
+      .grey-input {
+          background-color: #e7e7e7; 
+          color: black; /* Gray */
+          margin: 1px 0;
+          padding: 1px 1px;
+          width: 550px;   
+          display: block;
+        font-size: 15px;
+          } 
+
+      .white-input[type="text"] {
+          border: 1px #ccc solid;
+          width: 300px;
+          padding: 4px;
+          height: 35px;
+          margin-top: 10px;
+          opacity: 0.9;
+        }
+
+      .policy {
+          background-color: #e7e7e7; 
+          color: black; /* Gray */
+          margin: 1px 0;
+          padding: 1px 1px;
+          width: 550px;   
+          display: block;
+
+          } 
+
+        button {
+          cursor: pointer;
+          display: inline-block;
+          background-color: #24a0ed; 
+          border: 0;
+          border-radius: 5px;
+          padding: 10px 20px;
+          margin: 20px 0;
+        }
+
+          .green-button {
+          cursor: pointer;
+          display: inline-block;
+          background-color: #4CAF50; /* Green */
+          border: 0;
+          border-radius: 5px;
+          padding: 10px 20px;
+          margin: 20px 0;
+        }
+
+          .red-button {
+          cursor: pointer;
+          display: inline-block;
+          background-color: #D01010; /* RED */
+          border: 0;
+          border-radius: 5px;
+          padding: 10px 20px;
+          margin: 20px 0;
+        }     
+
+        .white-button {
+          cursor: pointer;
+          display: inline-block;
+          background-color: #FFFFFF; /* White */
+          border: 2px solid #00AF50;
+          border-radius: 5px;
+          padding: 2px 4px;
+          margin: 2px;
+          border-color: #FF0000;
+          color: black;
+        }   
+
+        input[type="text"] {
+          border: 1px #ccc solid;
+          width: 350px;
+          padding: 4px;
+          height: 35px;
+          margin-top: 10px;
+          opacity: 0.9;
+        }
+
+
+      #overlay {
+        display: none;
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background-color: gray;
+        top: 50px;
+        left: 50px;
+        padding: 10px;
+        opacity: .8;
+      }
+        .card {
+          margin: 20px 0;
+          border: #ccc 1px solid;
           padding: 20px;
-          line-height: 1.1;
-      }
+        }
 
-      very-small {
-          font-family: Arial, Helvetica, sans-serif;
-          font-size: 10px;
-          padding: 2px;
-          line-height: 0.9;
-      }
+        .box {
+            background: steelblue;
+            width: 1.6em;
+            height: 1.6em;
+        }
 
-      h1 {
-        text-align: center;
-        margin-bottom: 30px;
-        border-bottom: 1px #ccc solid;
-      }
-
-      h2 {
-        margin-top: 20px;
-      }
-    
-    .grey-input {
-        background-color: #e7e7e7; 
-        color: black; /* Gray */
-        margin: 1px 0;
-        padding: 1px 1px;
-        width: 550px;   
-        display: block;
-       font-size: 15px;
-        } 
-
-    .white-input[type="text"] {
-        border: 1px #ccc solid;
-        width: 300px;
-        padding: 4px;
-        height: 35px;
-        margin-top: 10px;
-        opacity: 0.9;
-      }
-
-    .policy {
-        background-color: #e7e7e7; 
-        color: black; /* Gray */
-        margin: 1px 0;
-        padding: 1px 1px;
-        width: 550px;   
-        display: block;
-
-        } 
-
-      button {
-        cursor: pointer;
-        display: inline-block;
-        background-color: #24a0ed; 
-        border: 0;
-        border-radius: 5px;
-        padding: 10px 20px;
-        margin: 20px 0;
-      }
-
-        .green-button {
-        cursor: pointer;
-        display: inline-block;
-        background-color: #4CAF50; /* Green */
-        border: 0;
-        border-radius: 5px;
-        padding: 10px 20px;
-        margin: 20px 0;
-      }
-
-        .red-button {
-        cursor: pointer;
-        display: inline-block;
-        background-color: #D01010; /* RED */
-        border: 0;
-        border-radius: 5px;
-        padding: 10px 20px;
-        margin: 20px 0;
-      }     
-
-      .white-button {
-        cursor: pointer;
-        display: inline-block;
-        background-color: #FFFFFF; /* White */
-        border: 2px solid #00AF50
-        border-radius: 5px;
-        padding: 2px 4px;
-        margin: 2px;
-        border-color: #FF0000;
-        color: black;
-      }   
-
-      input[type="text"] {
-        border: 1px #ccc solid;
-        width: 350px;
-        padding: 4px;
-        height: 35px;
-        margin-top: 10px;
-        opacity: 0.9;
-      }
-
-
-    #overlay {
-      display: none;
-      position: absolute;
-      width: 100px;
-      height: 100px;
-      background-color: gray;
-      top: 50px;
-      left: 50px;
-      padding: 10px;
-      opacity: .8;
+    .switch-toggle {
+      float: left;
+      background: #242729;
     }
-      .card {
-        margin: 20px 0;
-        border: #ccc 1px solid;
-        padding: 20px;
-      }
-
-      .box {
-          background: steelblue;
-          width: 1.6em;
-          height: 1.6em;
-      }
-
-  .switch-toggle {
-     float: left;
-     background: #242729;
+    .switch-toggle input {
+      position: absolute;
+      opacity: 0;
+    }
+    .switch-toggle input + label {
+      padding: 7px;
+      float:left;
+      color: #fff;
+      cursor: pointer;
+    }
+    .switch-toggle input:checked + label {
+      background: blue;
   }
-  .switch-toggle input {
+  .highlighted {
+    background-color: #ff0;
+  }
+  /* Tooltip container */
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    border: 1px black; /* If you want dots under the hoverable text */
+    /*border-top: 2px solid #000;*/
+  }
+  .visible {
+    display: block;
+  }
+  .hidden {
+    display: none;
+  }
+
+  /* Tooltip text */
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 320px;
+    background-color: #FFFFA0; 
+    color: #000000;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 6px solid #000;
+
+    /* Position the tooltip text */
     position: absolute;
+    z-index: 1;
+    bottom: 10%;
+    left: 50%;
+    margin-left: 75px;
+    margin-bottom: -560px;
+
+    /* Fade in tooltip */
     opacity: 0;
+    transition: opacity 0.3s;
   }
-  .switch-toggle input + label {
-    padding: 7px;
-    float:left;
-    color: #fff;
-    cursor: pointer;
+
+  /* Tooltip arrow */
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 200%;
+    left: 250%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
   }
-  .switch-toggle input:checked + label {
-    background: blue;
-}
-.highlighted {
-  background-color: #ff0;
-}
-/* Tooltip container */
-.tooltip {
-  position: relative;
-  display: inline-block;
-  border: 1px black; /* If you want dots under the hoverable text */
-  /*border-top: 2px solid #000;*/
-}
-.visible {
-  display: block;
-}
-.hidden {
-  display: none;
-}
 
-/* Tooltip text */
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 320px;
-  background-color: #FFFFA0; 
-  color: #000000;
-  text-align: center;
-  padding: 10px 0;
-  border-radius: 6px solid #000;
+  /* Show the tooltip text when you mouse over the tooltip container */
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
 
-  /* Position the tooltip text */
-  position: absolute;
-  z-index: 1;
-  bottom: 10%;
-  left: 50%;
-  margin-left: 75px;
-  margin-bottom: -560px
+  .show-btn {
+    display: inline-block;
+  }
 
-  /* Fade in tooltip */
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-/* Tooltip arrow */
-.tooltip .tooltiptext::after {
-  content: "";
-  position: absolute;
-  top: 200%;
-  left: 250%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
-}
-
-/* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-}
+  .hide-btn {
+    display: none;
+  }
 
     </style>
 
@@ -301,7 +309,7 @@
     <span id="input_external"></span>
 
     <button id="test-connection-btn">Test Connection</button>
-    <button id="regenerate-btn" visibility="hidden" display="block">Regenerate External ID</button>
+    <button id="regenerate-btn" visibility="hidden" class="show-secure hide-btn">Regenerate External ID</button>
     <br>
 
     <script>
@@ -316,7 +324,7 @@
 
     <hr style="height:2px;border-width:1;color:orange">
 
-    <div width: 320px; padding="10px" border="5px solid orange" margin=0>
+    <div width: 320px padding="10px" border="5px solid orange" margin="0">
 
       <small type="text" padding="0px">SSC_role Assume Role Trust Policy in Victim Account AWS Portal</small><br>
       <very-small type="text">role: SSC_role  (the attacker cannot change this)</very-small>
@@ -408,6 +416,9 @@
     window.external_id_policy_value = "SecureCloud"
     resetState();
     setExternalBox('white');
+    var btn = document.getElementById('regenerate-btn');
+    btn.classList.add('hide-btn');
+    btn.classList.remove('show-btn');
   };
   function toggleBtnEasy() {
     window.game_state = "Easy"
@@ -415,6 +426,9 @@
     window.external_id_policy_value = "SecureCloud_Dev"
     resetState();
     setExternalBox('white');
+    var btn = document.getElementById('regenerate-btn');
+    btn.classList.add('hide-btn');
+    btn.classList.remove('show-btn');
   };
   function toggleBtnTamper() {
     window.game_state = "Tamper"
@@ -422,6 +436,9 @@
     window.external_id_policy_value = "fc2a0258-aee3-41f9-a37a-7db9c9e16cee"
     resetState();
     setExternalBox('grey');
+    var btn = document.getElementById('regenerate-btn');
+    btn.classList.add('hide-btn');
+    btn.classList.remove('show-btn');
   };
   function toggleBtnInsider() {
     window.game_state = "Insider"
@@ -430,6 +447,9 @@
     window.external_id_policy_value = 'fc2a0258-aee3-41f9-a37a-7db9c9e16cee';
     resetState();
     setExternalBox('white');
+    var btn = document.getElementById('regenerate-btn');
+    btn.classList.add('hide-btn');
+    btn.classList.remove('show-btn');
   };
   function toggleBtnSecure() {
     window.game_state = "Secure"
@@ -438,6 +458,9 @@
     window.external_id_policy_value = 'fc2a0258-aee3-41f9-a37a-7db9c9e16cee';
     resetState();
     setExternalBox('grey');
+    var btn = document.getElementById('regenerate-btn');
+    btn.classList.remove('hide-btn');
+    btn.classList.add('show-btn');
   };
 
 </script>
@@ -459,7 +482,8 @@
     </script>
 
 <!--       This is intended to set the value, wait a split second then repeat
-      five times until it settles on SSC_role. WIP, not working yet. -->
+      five times until it settles on SSC_role. WIP, not working yet.  
+
     <script type="text/python" id="brute_force_role_script">
 
       from browser import document, console, alert, window, timer
@@ -475,8 +499,25 @@
 
       document['brute_force_role'].bind('click', brute_force_role)
 
-    </script>
+    </script>  -->
 
+    <script>
+        var role_txt = document.getElementById('role');
+        var button = document.getElementById('brute_force_role');
+        button.addEventListener('click', function(e) {
+            brute_force_role();
+        })
+        
+        function brute_force_role() {
+          var roles = ["SSC", "SSC-role", "SecureCloud-role", "SecureCloudRole", "SSC_role_Dev", "SSC_role_prod", "SSC_role"];
+          role_txt.value = roles[0];
+          for(let i = 1 ; i < roles.length ; i++){
+              setTimeout(function() {
+                  role_txt.value = roles[i];
+              }, i*1000);
+          }
+        } 
+    </script>
     <!-- Test Connection -> Success; Someday real test -->
     <script type="text/python" id="test_connection">
         from browser import document, console, alert, window, timer
