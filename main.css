@@ -1,0 +1,233 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    padding: 30px;
+    line-height: 1.6;
+}
+
+small {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    padding: 20px;
+    line-height: 1.1;
+}
+
+very-small {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    padding: 2px;
+    line-height: 0.9;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 1px #ccc solid;
+}
+
+h2 {
+    margin-top: 20px;
+}
+
+.grey-input {
+    background-color: #e7e7e7; 
+    color: black; /* Gray */
+    margin: 1px 0;
+    padding: 1px 1px;
+    width: 550px;   
+    display: flexbox;
+    font-size: 15px;
+} 
+
+.white-input[type="text"] {
+    border: 1px #ccc solid;
+    width: 300px;
+    padding: 4px;
+    height: 35px;
+    margin-top: 10px;
+    opacity: 0.9;
+}
+
+.policy {
+    background-color: #e7e7e7; 
+    color: black; /* Gray */
+    margin: 1px 0;
+    padding: 1px 1px;
+    width: 550px;   
+    display: block;
+} 
+
+button {
+    cursor: pointer;
+    display: inline-block;
+    background-color: #24a0ed; 
+    border: 0;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 20px 0;
+}
+
+.green-button {
+    cursor: pointer;
+    display: inline-block;
+    background-color: #4CAF50; /* Green */
+    border: 0;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 20px 0;
+}
+
+.red-button {
+    cursor: pointer;
+    display: inline-block;
+    background-color: #D01010; /* RED */
+    border: 0;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 20px 0;
+}     
+
+.white-button {
+    cursor: pointer;
+    display: inline-block;
+    background-color: #FFFFFF; /* White */
+    border: 2px solid #00AF50;
+    border-radius: 5px;
+    padding: 2px 4px;
+    margin: 2px;
+    border-color: #FF0000;
+    color: black;
+}   
+
+input[type="text"] {
+    border: 1px #ccc solid;
+    width: 350px;
+    padding: 4px;
+    height: 35px;
+    margin-top: 10px;
+    opacity: 0.9;
+}
+
+#overlay {
+    display: none;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: gray;
+    top: 50px;
+    left: 50px;
+    padding: 10px;
+    opacity: .8;
+}
+
+.card {
+    margin: 20px 0;
+    border: #ccc 1px solid;
+    padding: 20px;
+}
+
+.box {
+    background: steelblue;
+    width: 1.6em;
+    height: 1.6em;
+}
+
+.switch-toggle {
+    float: left;
+    background: #242729;
+}
+
+.switch-toggle input {
+    position: absolute;
+    opacity: 0;
+}
+
+.switch-toggle input + label {
+    padding: 7px;
+    float:left;
+    color: #fff;
+    cursor: pointer;
+    }
+    .switch-toggle input:checked + label {
+    background: blue;
+}
+
+.highlighted {
+    background-color: #ff0;
+}
+
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border: 1px black; /* If you want dots under the hoverable text */
+    /*border-top: 2px solid #000;*/
+}
+
+.visible {
+    display: block;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 320px;
+    background-color: #FFFFA0; 
+    color: #000000;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 6px solid #000;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 10%;
+    left: 50%;
+    margin-left: 75px;
+    margin-bottom: -560px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 200%;
+    left: 250%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.show-btn {
+    display: inline-block;
+}
+
+.hide-btn {
+    display: none;
+}
+
+.display-error {
+    color: #D01010;
+    font-size: small;
+}
