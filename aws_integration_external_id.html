@@ -53,8 +53,8 @@
           margin: 1px 0;
           padding: 1px 1px;
           width: 550px;   
-          display: block;
-        font-size: 15px;
+          display: flexbox;
+          font-size: 15px;
           } 
 
       .white-input[type="text"] {
@@ -234,9 +234,15 @@
     display: none;
   }
 
+  .display-error {
+    color: #D01010;
+    font-size: small;
+  }
+  
+
     </style>
 
-        <!-- <script data-require="jquery" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script> -->
+    <!-- <script data-require="jquery" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script> -->
 
     <script type="text/javascript" id="uuid_script">
 
@@ -289,25 +295,30 @@
                <span class="tooltiptext">It must match the policy below. Blog coming soon: A million and one ways to find AWS Account IDs.</span>
                         </div>
     <br>
-    <input type="text" id="account_id" placeholder="eg. 123456789012" value="">
+    <input type="text" id="account_id" placeholder="eg. 123456789012" value="" maxlength="12">
+    <span id="displayErrorID" class="display-error"></span>
     <span id="output"></span>
     <br>
     Role Name <very-small>You create this in your account for Super Secure Cloud to access your data</very-small>
     <br>
-    <input type="text" id="role" placeholder="eg. SSC_role" value="">
+    <input type="text" id="role" placeholder="eg. SSC_role" value="" maxlength="64">
+  
     <span id="input_role"></span> 
     <div class="tooltip" value="" visibility="hidden">
       <button id="brute_force_role" type="text" class="white-button" visibility="hidden">
       Brute for the role</button>
       <span class="tooltiptext">Click to simulate running Pacu to brute-force the role name</span>
     </div>
+    <span id="displayErrorROLE" class="display-error"></span>
     <br>
     ExternalId <very-small>Copy the ExternalID into your policy in the AWS Console</very-small>
 
     <br>
     <input type="text" id="input_external_id" value="SecureCloud" placeholder="SecureCloud" class="grey-input" readonly>
+    <span id="displayErrorEXT" class="display-error"></span>
     <span id="input_external"></span>
 
+    <br>
     <button id="test-connection-btn">Test Connection</button>
     <button id="regenerate-btn" visibility="hidden" class="show-secure hide-btn">Regenerate External ID</button>
     <br>
@@ -387,7 +398,6 @@
   };
    renderJson();
     </script>
-
 
 <script>
   function resetState () {
@@ -526,6 +536,41 @@
               }, i*1000);
           }
         } 
+    </script>
+
+    <script>
+        var $ = function(id) { return document.getElementById(id); };
+        
+        $('account_id').oninput = function () {
+            if($('account_id').value.search(/\D+/) > -1){
+              $('account_id').value = $('account_id').value.replace(/\D+/, "");
+                $('displayErrorID').innerHTML = 'Invalid character';
+                setTimeout(function() {
+                    $('displayErrorID').innerHTML = ""
+                }, 1000);
+            }
+        }
+
+        $('role').oninput = function () {
+            if($('role').value.search(/[^\w+=,.@-]+/) > -1){
+              $('role').value = $('role').value.replace(/[^\w+=,.@-]+/, "");
+                $('displayErrorROLE').innerHTML = 'Invalid character';
+                setTimeout(function() {
+                    $('displayErrorROLE').innerHTML = ""
+                }, 1000);
+            }
+        }
+
+        $('input_external_id').oninput = function () {
+            if($('input_external_id').value.search(/[^a-zA-Z0-9+=:,.@/-]+/) > -1){
+              $('input_external_id').value = $('input_external_id').value.replace(/[^a-zA-Z0-9+=:,.@/-]+/, "");
+                $('displayErrorEXT').innerHTML = 'Invalid character';
+                setTimeout(function() {
+                    $('displayErrorEXT').innerHTML = ""
+                }, 1000);
+            }
+        }
+
     </script>
 
     <!-- Test Connection (only for Tamper mode) -> Success; Someday real test -->
