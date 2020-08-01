@@ -4,512 +4,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.8/brython.js" integrity="sha256-rA89wPrTJJQFWJaZveKW8jpdmC3t5F9rRkPyBjz8G04=" crossorigin="anonymous"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.8/brython_stdlib.js" integrity="sha256-Gnrw9tIjrsXcZSCh/wos5Jrpn0bNVNFJuNJI9d71TDs=" crossorigin="anonymous"></script>
-
-    <style>
-          * {
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 25px;
-            padding: 30px;
-            line-height: 1.6;
-        }
-
-        small {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 15px;
-            padding: 20px;
-            line-height: 1.1;
-        }
-
-        very-small {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 10px;
-            padding: 2px;
-            line-height: 0.9;
-        }
-
-        h1 {
-          text-align: center;
-          margin-bottom: 30px;
-          border-bottom: 1px #ccc solid;
-        }
-
-        h2 {
-          margin-top: 20px;
-        }
-      
-      .grey-input {
-          background-color: #e7e7e7; 
-          color: black; /* Gray */
-          margin: 1px 0;
-          padding: 1px 1px;
-          width: 550px;   
-          display: block;
-        font-size: 15px;
-          } 
-
-      .white-input[type="text"] {
-          border: 1px #ccc solid;
-          width: 300px;
-          padding: 4px;
-          height: 35px;
-          margin-top: 10px;
-          opacity: 0.9;
-        }
-
-      .policy {
-          background-color: #e7e7e7; 
-          color: black; /* Gray */
-          margin: 1px 0;
-          padding: 1px 1px;
-          width: 550px;   
-          display: block;
-
-          } 
-
-        button {
-          cursor: pointer;
-          display: inline-block;
-          background-color: #24a0ed; 
-          border: 0;
-          border-radius: 5px;
-          padding: 10px 20px;
-          margin: 20px 0;
-        }
-
-          .green-button {
-          cursor: pointer;
-          display: inline-block;
-          background-color: #4CAF50; /* Green */
-          border: 0;
-          border-radius: 5px;
-          padding: 10px 20px;
-          margin: 20px 0;
-        }
-
-          .red-button {
-          cursor: pointer;
-          display: inline-block;
-          background-color: #D01010; /* RED */
-          border: 0;
-          border-radius: 5px;
-          padding: 10px 20px;
-          margin: 20px 0;
-        }     
-
-        .white-button {
-          cursor: pointer;
-          display: inline-block;
-          background-color: #FFFFFF; /* White */
-          border: 2px solid #00AF50;
-          border-radius: 5px;
-          padding: 2px 4px;
-          margin: 2px;
-          border-color: #FF0000;
-          color: black;
-        }   
-
-        input[type="text"] {
-          border: 1px #ccc solid;
-          width: 350px;
-          padding: 4px;
-          height: 35px;
-          margin-top: 10px;
-          opacity: 0.9;
-        }
-
-
-      #overlay {
-        display: none;
-        position: absolute;
-        width: 100px;
-        height: 100px;
-        background-color: gray;
-        top: 50px;
-        left: 50px;
-        padding: 10px;
-        opacity: .8;
-      }
-        .card {
-          margin: 20px 0;
-          border: #ccc 1px solid;
-          padding: 20px;
-        }
-
-        .box {
-            background: steelblue;
-            width: 1.6em;
-            height: 1.6em;
-        }
-
-    .switch-toggle {
-      float: left;
-      background: #242729;
-    }
-    .switch-toggle input {
-      position: absolute;
-      opacity: 0;
-    }
-    .switch-toggle input + label {
-      padding: 7px;
-      float:left;
-      color: #fff;
-      cursor: pointer;
-    }
-    .switch-toggle input:checked + label {
-      background: blue;
-  }
-  .highlighted {
-    background-color: #ff0;
-  }
-  /* Tooltip container */
-  .tooltip {
-    position: relative;
-    display: inline-block;
-    border: 1px black; /* If you want dots under the hoverable text */
-    /*border-top: 2px solid #000;*/
-  }
-  .visible {
-    display: block;
-  }
-  .hidden {
-    display: none;
-  }
-
-  /* Tooltip text */
-  .tooltip .tooltiptext {
-    visibility: hidden;
-    width: 320px;
-    background-color: #FFFFA0; 
-    color: #000000;
-    text-align: center;
-    padding: 10px 0;
-    border-radius: 6px solid #000;
-
-    /* Position the tooltip text */
-    position: absolute;
-    z-index: 1;
-    bottom: 10%;
-    left: 50%;
-    margin-left: 75px;
-    margin-bottom: -560px;
-
-    /* Fade in tooltip */
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  /* Tooltip arrow */
-  .tooltip .tooltiptext::after {
-    content: "";
-    position: absolute;
-    top: 200%;
-    left: 250%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-  }
-
-  /* Show the tooltip text when you mouse over the tooltip container */
-  .tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  .show-btn {
-    display: inline-block;
-  }
-
-  .hide-btn {
-    display: none;
-  }
-
-    </style>
-
-        <!-- <script data-require="jquery" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script> -->
-
+    <title>Confused Deputy Demo</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
     <script type="text/javascript" id="uuid_script">
 
         function uuidv4() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-        });
-
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
         }
 
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js"></script>
-
-    <title>Confused Deputy Demo</title>
-
-    </head>
-    <body onload="brython()">
-        <h1>Super Secure Your Cloud We Will Make</h1>
-
-     <div class="switch-toggle switch-3 switch-candy">
-
-      <input id="trivial" name="state-d" type="radio" checked="checked" />
-      <label for="trivial" onclick="toggleBtnTrivial()">Trivial</label>
-
-      <input id="easy" class="disabled" name="state-d" type="radio" />
-      <label for="easy" onclick="toggleBtnEasy()">Easy</label>
-
-      <input id="tamper" class="disabled" name="state-d" type="radio" />
-      <label for="tamper" onclick="toggleBtnTamper()">Tamper</label>
-
-      <input id="insider_attack" class="disabled" name="state-d" type="radio"  />
-      <label for="insider_attack" onclick="toggleBtnInsider()">Insider Attack</label>
-
-      <input id="secure" class="disabled" name="state-d" type="radio" />
-      <label for="secure" onclick="toggleBtnSecure()">Secure</label>
-
-      </div>
-<br>
-
+</head>
+<body onload="brython()">
+    <h1>Super Secure Your Cloud We Will Make</h1>
+    <div class="switch-toggle switch-3 switch-candy">
+        <input id="trivial" name="state-d" type="radio" checked="checked"/>
+        <label for="trivial" onclick="toggleBtnTrivial()">Trivial</label>
+        <input id="easy" class="disabled" name="state-d" type="radio"/>
+        <label for="easy" onclick="toggleBtnEasy()">Easy</label>
+        <input id="tamper" class="disabled" name="state-d" type="radio"/>
+        <label for="tamper" onclick="toggleBtnTamper()">Tamper</label>
+        <input id="insider_attack" class="disabled" name="state-d" type="radio"  />
+        <label for="insider_attack" onclick="toggleBtnInsider()">Insider Attack</label>
+        <input id="secure" class="disabled" name="state-d" type="radio" />
+        <label for="secure" onclick="toggleBtnSecure()">Secure</label>
+    </div>
+    <br>
 
     <script id="global-js">
-      var game_state = "Trivial"
+        var game_state = "Trivial"
     </script>
 
     <br>
     Your AWS Account Id <div class="tooltip" value="">
-               <button id="guess_account_id" type="text" class="white-button">Guess the account Id</button>
-               <span class="tooltiptext">It must match the policy below. Blog coming soon: A million and one ways to find AWS Account IDs.</span>
-                        </div>
+        <button id="guess_account_id" type="text" class="white-button">Guess the account Id</button>
+        <span class="tooltiptext">It must match the policy below. Blog coming soon: A million and one ways to find AWS Account IDs.</span>
+    </div>
     <br>
-    <input type="text" id="account_id" placeholder="eg. 123456789012" value="">
+
+    <input type="text" id="account_id" placeholder="eg. 123456789012" value="" maxlength="12">
+    <span id="displayErrorID" class="display-error"></span>
     <span id="output"></span>
     <br>
     Role Name <very-small>You create this in your account for Super Secure Cloud to access your data</very-small>
     <br>
-    <input type="text" id="role" placeholder="eg. SSC_role" value="">
+    <input type="text" id="role" placeholder="eg. SSC_role" value="" maxlength="64">
+    
     <span id="input_role"></span> 
     <div class="tooltip" value="" visibility="hidden">
-      <button id="brute_force_role" type="text" class="white-button" visibility="hidden">
-      Brute for the role</button>
-      <span class="tooltiptext">Click to simulate running Pacu to brute-force the role name</span>
+        <button id="brute_force_role" type="text" class="white-button" visibility="hidden">Brute for the role</button>
+        <span class="tooltiptext">Click to simulate running Pacu to brute-force the role name</span>
     </div>
+    <span id="displayErrorROLE" class="display-error"></span>
     <br>
     ExternalId <very-small>Copy the ExternalID into your policy in the AWS Console</very-small>
-
     <br>
     <input type="text" id="input_external_id" value="SecureCloud" placeholder="SecureCloud" class="grey-input" readonly>
+    <span id="displayErrorEXT" class="display-error"></span>
     <span id="input_external"></span>
-
+    <br>
     <button id="test-connection-btn">Test Connection</button>
     <button id="regenerate-btn" visibility="hidden" class="show-secure hide-btn">Regenerate External ID</button>
     <br>
 
     <script>
-      function setImageVisible(id, visible) {
-    var img = document.getElementById(id);
-    img.style.visibility = (visible ? 'visible' : 'hidden');
-    }
+        function setImageVisible(id, visible) {
+        var img = document.getElementById(id);
+        img.style.visibility = (visible ? 'visible' : 'hidden');
+        }
     </script>
 
-    <img id="intercepted" src="burp_intercepted.png" visibility="hidden" style="display:none">
+    <img id="intercepted" src="burp_intercepted.png" visibility="hidden" style="display:none" alt="Burped change image">
     <button id="intercepted-btn" src="burp_intercepted.png" visibility="hidden" style="display:none">Replace with stolen externalID</button>
-    <img id="changed" src="burp_changed.png" visibility="hidden" style="display:none">
+    <img id="changed" src="burp_changed.png" visibility="hidden" style="display:none" alt="Burped changed image">
 
     <hr style="height:2px;border-width:1;color:orange">
 
     <div width: 320px padding="10px" border="5px solid orange" margin="0">
-
-      <small type="text" padding="0px">SSC_role Assume Role Trust Policy in Victim Account AWS Portal</small><br>
-      <very-small type="text">role: SSC_role  (the attacker cannot change this)</very-small>
-      <pre id="AWSPolicy" class="grey-input"></pre>
+        <small type="text" padding="0px">SSC_role Assume Role Trust Policy in Victim Account AWS Portal</small><br>
+        <very-small type="text">role: SSC_role  (the attacker cannot change this)</very-small>
+        <pre id="AWSPolicy" class="grey-input"></pre>
     </div>
 
+    <!--  Add your javascript here
+    -->
+    <script type="text/javascript" id="highlight">
+        highlight = function(jsonString, searchFor) {
+            var regex = new RegExp(searchFor, 'g');
+            var highlighted = '<span class="highlighted">' + searchFor + '</span>';
+            var newJsonString = jsonString.replace(regex, highlighted);
+            return prettyPrintOne(newJsonString);
+        };
+       
+        var highlightLine = function(jsonString, searchFor) {
+            var regex = new RegExp('(.*' + searchFor + '.*)', 'g');
+            var highlighted = '<span class="highlighted">$1</span>';
+            var newJsonString = jsonString.replace(regex, highlighted);
+            console.log(jsonString.match(regex));
+            return prettyPrintOne(newJsonString);
+        };
+        var input_external_id = document.getElementById('input_external_id').innerHTML;
+        var external_id_policy_value = "SecureCloud";
+     
+        var renderJson = function() {
+     
+            console.log("exteranl_id_policy_value " + window.external_id_policy_value)
+            console.log("input_external_id " + document.getElementById("input_external_id").value);
+     
+        var jsonVar = {
+           "Version": "2012-10-17",
+           "Statement": [
+             {
+               "Effect": "Allow",
+               "Principal": {
+                 "AWS": "arn:aws:iam::999999999999:root"
+               },
+               "Action": "sts:AssumeRole",
+               "Condition": {
+                 "StringLike": {
+                   "sts:ExternalId": ["SecureCloud"]
+                 }
+               }
+             }
+           ]
+        };
+     
+        jsonVar['Statement'][0]['Condition']['StringLike']['sts:ExternalId'][0] = window.external_id_policy_value;
+     
+        jsonStr = JSON.stringify(jsonVar, null, 2);
+     
+        var hlight = highlight(jsonStr, window.external_id_policy_value);
+        document.getElementById('AWSPolicy').innerHTML = hlight;
 
-
-
-<!--  Add your javascript here
- -->
- <script type="text/javascript" id="highlight">
-   highlight = function(jsonString, searchFor) {
-    var regex = new RegExp(searchFor, 'g');
-    var highlighted = '<span class="highlighted">' + searchFor + '</span>';
-    var newJsonString = jsonString.replace(regex, highlighted);
-    return prettyPrintOne(newJsonString);
-  };
-  
-  var highlightLine = function(jsonString, searchFor) {
-    var regex = new RegExp('(.*' + searchFor + '.*)', 'g');
-    var highlighted = '<span class="highlighted">$1</span>';
-    var newJsonString = jsonString.replace(regex, highlighted);
-    console.log(jsonString.match(regex));
-    return prettyPrintOne(newJsonString);
-  };
-  var input_external_id = document.getElementById('input_external_id').innerHTML;
-  var external_id_policy_value = "SecureCloud";
-
-  var renderJson = function() {
-
-    console.log("exteranl_id_policy_value " + window.external_id_policy_value)
-    console.log("input_external_id " + document.getElementById("input_external_id").value);
-
-    var jsonVar = {
-      "Version": "2012-10-17",
-      "Statement": [
-        {
-          "Effect": "Allow",
-          "Principal": {
-            "AWS": "arn:aws:iam::999999999999:root"
-          },
-          "Action": "sts:AssumeRole",
-          "Condition": {
-            "StringLike": {
-              "sts:ExternalId": ["SecureCloud"]
-            }
-          }
-        }
-      ]
-    };
-
-    jsonVar['Statement'][0]['Condition']['StringLike']['sts:ExternalId'][0] = window.external_id_policy_value;
-
-    jsonStr = JSON.stringify(jsonVar, null, 2);
-
-    var hlight = highlight(jsonStr, window.external_id_policy_value);
-    document.getElementById('AWSPolicy').innerHTML = hlight;
-  };
-   renderJson();
+        };
+        renderJson();
     </script>
+    
+    <script>
+        function resetState () {
+            setImageVisible('intercepted', false)
+            setImageVisible('changed', false)
+            document.getElementById('test-connection-btn').style.backgroundColor = '#24a0ed';
+            document.getElementById('test-connection-btn').innerHTML = 'Test Connection';
+            document.getElementById('input_external_id').value = "" ;  
+            renderJson();
+        };
+       
+        function setExternalBox (color) {
+            if (color === 'white') {
+                document.getElementById('input_external_id').class_name = 'white-input';
+                document.getElementById('input_external_id').style.backgroundColor = "white";
+                document.getElementById('input_external_id').removeAttribute('readonly');
+            } else {
+                document.getElementById('input_external_id').style.backgroundColor = "lightgrey";
+                document.getElementById('input_external_id').setAttribute('readonly', true);
+            } 
+        };
+      
+        function toggleBtnTrivial() {
+            window.game_state = "Trivial"
+            document.getElementById('input_external_id').setAttribute('placeholder', "SecureCloud");  
+            window.external_id_policy_value = "SecureCloud"
+            resetState();
+            setExternalBox('white');
+            var btn = document.getElementById('regenerate-btn');
+            btn.classList.add('hide-btn');
+            btn.classList.remove('show-btn');
+            document.getElementById('intercepted-btn').style.visibility = "hidden";
+        };
 
+        function toggleBtnEasy() {
+            window.game_state = "Easy"
+            document.getElementById('input_external_id').setAttribute('placeholder', "eg. SecureCloud_prod");  
+            window.external_id_policy_value = "SecureCloud_Dev"
+            resetState();
+            setExternalBox('white');
+            var btn = document.getElementById('regenerate-btn');
+            btn.classList.add('hide-btn');
+            btn.classList.remove('show-btn');
+            document.getElementById('intercepted-btn').style.visibility = "hidden";
+        };
 
-<script>
-  function resetState () {
-      setImageVisible('intercepted', false)
-      setImageVisible('changed', false)
-      document.getElementById('test-connection-btn').style.backgroundColor = '#24a0ed';
-      document.getElementById('test-connection-btn').innerHTML = 'Test Connection';
-      document.getElementById('input_external_id').value = "" ;  
-      renderJson();
-  };
- 
-  function setExternalBox (color) {
-    if (color === 'white') {
-      document.getElementById('input_external_id').class_name = 'white-input';
-      document.getElementById('input_external_id').style.backgroundColor = "white";
-      document.getElementById('input_external_id').removeAttribute('readonly');
-    } else {
-      document.getElementById('input_external_id').style.backgroundColor = "lightgrey";
-      document.getElementById('input_external_id').setAttribute('readonly', true);
-    }
+        function toggleBtnTamper() {
+            window.game_state = "Tamper"
+            document.getElementById('input_external_id').setAttribute('placeholder', "22813a05-959f-4a1e-9698-fc811388c298");  
+            window.external_id_policy_value = "fc2a0258-aee3-41f9-a37a-7db9c9e16cee"
+            resetState();
+            setExternalBox('grey');
+            var btn = document.getElementById('regenerate-btn');
+            btn.classList.add('hide-btn');
+            btn.classList.remove('show-btn');
+        };
 
-  };
+        function toggleBtnInsider() {
+            window.game_state = "Insider"
+            var ext = uuidv4();
+            document.getElementById('input_external_id').setAttribute('placeholder', ext);  
+            window.external_id_policy_value = 'fc2a0258-aee3-41f9-a37a-7db9c9e16cee';
+            resetState();
+            setExternalBox('white');
+            var btn = document.getElementById('regenerate-btn');
+            btn.classList.add('hide-btn');
+            btn.classList.remove('show-btn');
+            document.getElementById('intercepted-btn').style.visibility = "hidden";
+        };
 
-  function toggleBtnTrivial() {
-    window.game_state = "Trivial"
-    document.getElementById('input_external_id').setAttribute('placeholder', "SecureCloud");  
-    window.external_id_policy_value = "SecureCloud"
-    resetState();
-    setExternalBox('white');
-    var btn = document.getElementById('regenerate-btn');
-    btn.classList.add('hide-btn');
-    btn.classList.remove('show-btn');
-    document.getElementById('intercepted-btn').style.visibility = "hidden";
-  };
-  function toggleBtnEasy() {
-    window.game_state = "Easy"
-    document.getElementById('input_external_id').setAttribute('placeholder', "eg. SecureCloud_prod");  
-    window.external_id_policy_value = "SecureCloud_Dev"
-    resetState();
-    setExternalBox('white');
-    var btn = document.getElementById('regenerate-btn');
-    btn.classList.add('hide-btn');
-    btn.classList.remove('show-btn');
-    document.getElementById('intercepted-btn').style.visibility = "hidden";
-  };
-  function toggleBtnTamper() {
-    window.game_state = "Tamper"
-    document.getElementById('input_external_id').setAttribute('placeholder', "22813a05-959f-4a1e-9698-fc811388c298");  
-    window.external_id_policy_value = "fc2a0258-aee3-41f9-a37a-7db9c9e16cee"
-    resetState();
-    setExternalBox('grey');
-    var btn = document.getElementById('regenerate-btn');
-    btn.classList.add('hide-btn');
-    btn.classList.remove('show-btn');
-  };
-  function toggleBtnInsider() {
-    window.game_state = "Insider"
-    var ext = uuidv4();
-    document.getElementById('input_external_id').setAttribute('placeholder', ext);  
-    window.external_id_policy_value = 'fc2a0258-aee3-41f9-a37a-7db9c9e16cee';
-    resetState();
-    setExternalBox('white');
-    var btn = document.getElementById('regenerate-btn');
-    btn.classList.add('hide-btn');
-    btn.classList.remove('show-btn');
-    document.getElementById('intercepted-btn').style.visibility = "hidden";
-  };
-  function toggleBtnSecure() {
-    window.game_state = "Secure"
-    var ext = uuidv4();
-    document.getElementById('input_external_id').setAttribute('placeholder',  ext);
-    window.external_id_policy_value = 'fc2a0258-aee3-41f9-a37a-7db9c9e16cee';
-    resetState();
-    setExternalBox('grey');
-    var btn = document.getElementById('regenerate-btn');
-    btn.classList.remove('hide-btn');
-    btn.classList.add('show-btn');
-    document.getElementById('intercepted-btn').style.visibility = "hidden";
-  };
-
-</script>
+        function toggleBtnSecure() {
+            window.game_state = "Secure"
+            var ext = uuidv4();
+            document.getElementById('input_external_id').setAttribute('placeholder',  ext);
+            window.external_id_policy_value = 'fc2a0258-aee3-41f9-a37a-7db9c9e16cee';
+            resetState();
+            setExternalBox('grey');
+            var btn = document.getElementById('regenerate-btn');
+            btn.classList.remove('hide-btn');
+            btn.classList.add('show-btn');
+            document.getElementById('intercepted-btn').style.visibility = "hidden";
+        };
+    </script>
 
     <script type="text/python" id="guess_account_id_script">
-      from browser import document, console, alert, window, timer
-
-      def guess_account(e):
-          if document['account_id'].value == "":
-              document['account_id'].value = "513589784635"
-              document['account_id'].text = "513589784635"
-          else:  
-              # document['account_id'].value == "513589784635":
-              document['account_id'].value = "999999999999"
-          console.log("guess_account " + document['account_id'].value)
-
-      document['guess_account_id'].bind('click', guess_account)
-
+        from browser import document, console, alert, window, timer
+  
+        def guess_account(e):
+            if document['account_id'].value == "":
+                document['account_id'].value = "513589784635"
+                document['account_id'].text = "513589784635"
+            else:  
+                # document['account_id'].value == "513589784635":
+                document['account_id'].value = "999999999999"
+            console.log("guess_account " + document['account_id'].value)
+  
+        document['guess_account_id'].bind('click', guess_account)
+  
     </script>
-
-<!--  This is intended to set the value, wait a split second then repeat
-      five times until it settles on SSC_role. WIP, not working yet.  
-
-    <script type="text/python" id="brute_force_role_script">
-
-      from browser import document, console, alert, window, timer
-
-      def set_role_value(value):
-          #document['role'].text = value
-          document['role'].value = value   
-          console.log(document['role'].value)
-
-      def brute_force_role(e):
-          for role in ["SSC", "SSC-role", "SecureCloud-role", "SecureCloudRole", "SSC_role_Dev", "SSC_role_prod", "SSC_role"]: 
-              timer.set_timeout(set_role_value(role), 1000)
-
-      document['brute_force_role'].bind('click', brute_force_role)
-
-    </script>  -->
-
-    <!-- 
-      Script in js that changes the input value in the role name field with 1 second of delay. Activates when clicking 
-      "Brute for the role" button
-    -->
     <script>
         var role_txt = document.getElementById('role');
         var button = document.getElementById('brute_force_role');
@@ -528,6 +262,75 @@
         } 
     </script>
 
+    <script>
+        var $ = function(id) { return document.getElementById(id); };
+        
+        $('account_id').oninput = function () {
+            if($('account_id').value.search(/\D+/) > -1){
+              $('account_id').value = $('account_id').value.replace(/\D+/, "");
+                $('displayErrorID').innerHTML = 'Invalid character';
+                setTimeout(function() {
+                    $('displayErrorID').innerHTML = ""
+                }, 1000);
+            }
+        }
+
+        $('role').oninput = function () {
+            if($('role').value.search(/[^\w+=,.@-]+/) > -1){
+              $('role').value = $('role').value.replace(/[^\w+=,.@-]+/, "");
+                $('displayErrorROLE').innerHTML = 'Invalid character';
+                setTimeout(function() {
+                    $('displayErrorROLE').innerHTML = ""
+                }, 1000);
+            }
+        }
+
+        $('input_external_id').oninput = function () {
+            if($('input_external_id').value.search(/[^a-zA-Z0-9+=:,.@/-]+/) > -1){
+              $('input_external_id').value = $('input_external_id').value.replace(/[^a-zA-Z0-9+=:,.@/-]+/, "");
+                $('displayErrorEXT').innerHTML = 'Invalid character';
+                setTimeout(function() {
+                    $('displayErrorEXT').innerHTML = ""
+                }, 1000);
+            }
+        }
+
+    </script>
+
+    <script>
+        var $ = function(id) { return document.getElementById(id); };
+        
+        $('account_id').oninput = function () {
+            if($('account_id').value.search(/\D+/) > -1){
+            $('account_id').value = $('account_id').value.replace(/\D+/, "");
+                $('displayErrorID').innerHTML = 'Invalid character';
+                setTimeout(function() {
+                    $('displayErrorID').innerHTML = ""
+                }, 1000);
+            }
+        }
+
+        $('role').oninput = function () {
+            if($('role').value.search(/[^\w+=,.@-]+/) > -1){
+            $('role').value = $('role').value.replace(/[^\w+=,.@-]+/, "");
+                $('displayErrorROLE').innerHTML = 'Invalid character';
+                setTimeout(function() {
+                    $('displayErrorROLE').innerHTML = ""
+                }, 1000);
+            }
+        }
+
+        $('input_external_id').oninput = function () {
+            if($('input_external_id').value.search(/[^a-zA-Z0-9+=:,.@/-]+/) > -1){
+            $('input_external_id').value = $('input_external_id').value.replace(/[^a-zA-Z0-9+=:,.@/-]+/, "");
+                $('displayErrorEXT').innerHTML = 'Invalid character';
+                setTimeout(function() {
+                    $('displayErrorEXT').innerHTML = ""
+                }, 1000);
+            }
+        }
+    </script>
+
     <!-- Test Connection (only for Tamper mode) -> Success; Someday real test -->
     <script>
         var testc_btn = document.getElementById('test-connection-btn');
@@ -537,7 +340,6 @@
         testc_btn.addEventListener('click', function(e) {
             show();
         });
-
         replace_btn.addEventListener('click', function(e) {
             var img_changed = document.getElementById('changed');
             img_changed.style.visibility = "visible";
@@ -679,7 +481,6 @@
             Template(document['greet']).render(name=uuid_val)
 
         document['regenerate-btn'].bind('click', get_joke) '''
-
     </script>
 
     <!-- Unused Text bind -->
@@ -692,9 +493,6 @@
         document['output'].bind('input', show_text)
     </script>
 
-
-
-    
     <script type="text/python" id="script2">
         from browser import document, console, window
         from browser.template import Template
@@ -737,9 +535,5 @@
 
         #document['regenerate-btn'].bind('click', get_joke)
     </script>
-
-
-
 </body>
 </html>
-
